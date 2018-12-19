@@ -218,9 +218,10 @@ func (b *Builder) Run(ui packer.Ui, hook packer.Hook, cache packer.Cache) (packe
 			Directories: b.config.FloppyConfig.FloppyDirectories,
 		},
 		&common.StepHTTPServer{
-			HTTPDir:     b.config.HTTPDir,
-			HTTPPortMin: b.config.HTTPPortMin,
-			HTTPPortMax: b.config.HTTPPortMax,
+			HTTPDir:      b.config.HTTPDir,
+			HTTPPortMin:  b.config.HTTPPortMin,
+			HTTPPortMax:  b.config.HTTPPortMax,
+			HTTPProtocol: b.config.HTTPProtocol,
 		},
 		new(vboxcommon.StepSuppressMessages),
 		new(stepCreateVM),

@@ -8,14 +8,19 @@ import (
 
 // HTTPConfig contains configuration for the local HTTP Server
 type HTTPConfig struct {
-	HTTPDir     string `mapstructure:"http_directory"`
-	HTTPPortMin uint   `mapstructure:"http_port_min"`
-	HTTPPortMax uint   `mapstructure:"http_port_max"`
+	HTTPDir      string `mapstructure:"http_directory"`
+	HTTPPortMin  uint   `mapstructure:"http_port_min"`
+	HTTPPortMax  uint   `mapstructure:"http_port_max"`
+	HTTPProtocol string `mapstructure:"http_protocol"`
 }
 
 func (c *HTTPConfig) Prepare(ctx *interpolate.Context) []error {
 	// Validation
 	var errs []error
+
+	if c.HTTPProtocol == "" {
+		c.HTTPProtocol = "tcp"
+	}
 
 	if c.HTTPPortMin == 0 {
 		c.HTTPPortMin = 8000

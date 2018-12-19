@@ -23,9 +23,10 @@ import (
 // Produces:
 //   http_port int - The port the HTTP server started on.
 type StepHTTPServer struct {
-	HTTPDir     string
-	HTTPPortMin uint
-	HTTPPortMax uint
+	HTTPDir      string
+	HTTPPortMin  uint
+	HTTPPortMax  uint
+	HTTPProtocol string
 
 	l net.Listener
 }
@@ -54,14 +55,14 @@ func (s *StepHTTPServer) Run(_ context.Context, state multistep.StateBag) multis
 
 		httpPort = offset + s.HTTPPortMin
 		httpAddr = fmt.Sprintf("0.0.0.0:%d", httpPort)
-		log.Printf("Trying port: %d", httpPort)
-		s.l, err = net.Listen("tcp", httpAddr)
+		log.Printf("Protocol %v - Trying port: %d", s.HTTPProtocol, httpPort)
+		s.l, err = net.Listen(s.HTTPProtocol, httpAddr)
 		if err == nil {
 			break
 		}
 	}
 
-	ui.Say(fmt.Sprintf("Starting HTTP server on port %d", httpPort))
+	ui.Say(fmt.Sprintf("Starting HTTP server on port %d (%v mode), serving %v", httpPort, s.HTTPProtocol, http.Dir(s.HTTPDir)))
 
 	// Start the HTTP server and run it in the background
 	fileServer := http.FileServer(http.Dir(s.HTTPDir))
